@@ -2,9 +2,9 @@ package br.vemprafam.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,16 +16,16 @@ import br.vemprafam.dao.DaoProduto;
 import br.vemprafam.pojo.Produto;
 
 /**
- * Servlet implementation class ServletLista
+ * Servlet implementation class ServletCadastro
  */
-@WebServlet("/Lista")
-public class ServletLista extends HttpServlet {
+@WebServlet("/Cadastrar")
+public class ServletCadastro extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ServletLista() {
+    public ServletCadastro() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,41 +34,32 @@ public class ServletLista extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		int codigo = Integer.parseInt(request.getParameter("codigo"));
+		String descricao = request.getParameter("descricao");
+		int quantidade = Integer.parseInt(request.getParameter("quantidade"));
+		double preco = Double.parseDouble(request.getParameter("preco"));
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date dataCompra;
+		try {
+			dataCompra = dateFormat.parse(request.getParameter("dataCompra"));
+		} catch (ParseException e) {
+			dataCompra = new Date();
+		}
+		Produto produto = new Produto(codigo,descricao,quantidade,preco,dataCompra); 
+		DaoProduto dao = new DaoProduto();
+		dao.insert(produto);
 		PrintWriter out = response.getWriter();
 		out.println("<!DOCTYPE html>\r\n"
 				+ "<html>\r\n"
 				+ "<head>\r\n"
 				+ "<meta charset=\"ISO-8859-1\"/>\r\n"
-				+ "<title>Lista</title>\r\n"
+				+ "<title>Resultado</title>\r\n"
 				+ "</head>\r\n"
 				+ "<body>\r\n"
-				+ "<table border='1'>"
-	            + "<tr>\r\n"
-	   		    + "	<th>código</th>\r\n"
-	   		    + "	<th>descrição</th>\r\n"
-	   		    + "	<th>quantidade</th>\r\n"
-	   		    + "	<th>preço</th>\r\n"
-	   		    + "	<th>data da compra</th>\r\n"
-	   		    + "</tr>");
-		DaoProduto dao = new DaoProduto();
-		List<Produto> lista = dao.getLista();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		NumberFormat moedaFormat = NumberFormat.getCurrencyInstance(); 
-		for( Produto p: lista ) {
-			out.println("<tr>" +
-			"<td>" + p.getCodigo() + "</td>" +
-			"<td>" + p.getDescricao() + "</td>" +
-			"<td>" + p.getQuantidade() + "</td>" +
-			"<td>" + moedaFormat.format(p.getPreco()) + "</td>" +
-			"<td>" + dateFormat.format(p.getDataCompra()) +"</td></tr>" 
-		   ); 
-		}
-		out.println("</table>"
+				+ "<p>Produto inserido</p>\r\n"
 				+ "<a href=\"/Projeto\">voltar</a>"
 				+ "</body>\r\n"
 				+ "</html>");
-				
 	}
 
 	/**
