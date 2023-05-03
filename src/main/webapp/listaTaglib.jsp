@@ -18,8 +18,7 @@
 	<th>preço</th>
 	<th>data da compra</th>
 </tr>
-<jsp:useBean id="dao" class="br.vemprafam.dao.DaoProduto"/>
-<c:forEach var="p" items="${dao.lista}" varStatus="id">
+<c:forEach var="p" items="${produtos}" varStatus="id">
 <tr bgcolor="#${id.count%2==0?'aaee88':'ffffff'}">
 	<td>${p.codigo}</td>
 	<td>${p.descricao}</td>

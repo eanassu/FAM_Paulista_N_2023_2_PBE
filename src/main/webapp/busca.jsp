@@ -15,7 +15,7 @@
 <title>Busca</title>
 </head>
 <body>
-<form action="atualizar">
+<form action="Controller">
 <%
 int codigo = Integer.parseInt(request.getParameter("codigo"));
 DaoProduto dao = new DaoProduto();
@@ -28,6 +28,7 @@ descrição:<input type="text" name="descricao" value="<%=p.getDescricao()%>"/><br
 quantidade:<input type="text" name="quantidade" value="<%=p.getQuantidade()%>"/><br/>
 preço:<input type="text" name="preco" value="<%=p.getPreco()%>"/><br/>
 Data da Compra:<fam:campoData id="dataCompra" value="<%=dataCompra%>"/><br/>
+<input type="hidden" name="op" value="Alteracao"/>
 <input type="submit" value="enviar"/>
 </form>
 <a href="/Projeto">voltar</a>
